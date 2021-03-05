@@ -11,6 +11,7 @@ const createWindow = () => {
     width: 800,
     height: 600,
     frame: false,
+    show: false,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
@@ -19,6 +20,10 @@ const createWindow = () => {
   });
 
   mainWindow.loadURL(`file://${__dirname}/src/index.html`);
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
