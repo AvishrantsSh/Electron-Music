@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from 'electron';
-
+// Boring Stuff
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
