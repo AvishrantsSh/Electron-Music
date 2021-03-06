@@ -1,7 +1,7 @@
 {
   "name": "myapp",
   "productName": "myapp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Desciption to be provided soon :P",
   "main": "src/main.js",
   "scripts": {
