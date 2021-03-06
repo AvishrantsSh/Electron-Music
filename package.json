@@ -1,8 +1,8 @@
 {
   "name": "myapp",
   "productName": "myapp",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "version": "1.0.1",
+  "description": "Desciption to be provided soon :P",
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
