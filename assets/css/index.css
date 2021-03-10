@@ -4,11 +4,10 @@ body{
     color: white;
 }
 #stickynav{
-    position: absolute;
     text-align: right;
-    left: 0;
     width: 100vw;
     margin: 0;
+    /* -webkit-app-region: drag; */
 }
 .ctrlBtn{
     background-color: transparent;
@@ -23,4 +22,12 @@ body{
 
 .ctrlBtn:hover{
     background-color: red;
+}
+.footer{
+    position: absolute;
+    height: 10vh;
+    background-color: #222;
+    width: 100vw;
+    margin: 0;
+    bottom: 0;
 }

@@ -9,13 +9,14 @@
   <meta name="author" content="LolCat">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>MyPg</title>
+
   <!-- External Scripts -->
   <script src="https://kit.fontawesome.com/adbd72eac2.js" crossorigin="anonymous"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- My Script -->
+  <!-- My Styles -->
   <link rel="stylesheet" href="../assets/css/index.css">
+  <link rel="stylesheet" href="../assets/css/pane.css">
 
 </head>
 
@@ -25,7 +26,16 @@
     <button id="resBtn" class="ctrlBtn mx-1"><i class="far fa-square"></i></button>
     <button id="closeBtn" class="ctrlBtn mx-1"><i class="fas fa-times"></i></button>
   </div>
-  Just a test message
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-4" id="leftpane">Some Stuff Part1</div>
+      <div class="col-8" id="rightpane">Some Stuff Part1</div>
+    </div>
+  </div>
+  <div class="footer d-flex align-items-center">
+    Play Bar
+  </div>
   <script src="../assets/js/index.js"></script>
 </body>
 
