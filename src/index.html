@@ -15,28 +15,44 @@
   <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- My Styles -->
+  <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="stylesheet" href="../assets/css/index.css">
-  <link rel="stylesheet" href="../assets/css/pane.css">
-
 </head>
 
 <body>
-  <div id="stickynav">
-    <button id="minBtn" class="ctrlBtn mx-1"><i class="fas fa-minus"></i></button>
-    <button id="resBtn" class="ctrlBtn mx-1"><i class="far fa-square"></i></button>
-    <button id="closeBtn" class="ctrlBtn mx-1"><i class="fas fa-times"></i></button>
-  </div>
+  <main>
+    <header>
+      <nav id="stickynav">
+        <button id="minBtn" class="ctrlBtn"><i class="fas fa-minus"></i></button>
+        <button id="resBtn" class="ctrlBtn"><i id="maxmin" class="far fa-square"></i></button>
+        <button id="closeBtn" class="ctrlBtn"><i class="fas fa-times"></i></button>
+      </nav>
+    </header>
 
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-4" id="leftpane">Some Stuff Part1</div>
-      <div class="col-8" id="rightpane">Some Stuff Part1</div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-4" id="leftpane">Some Stuff Part1</div>
+        <div class="col-8" id="rightpane">Some Stuff Part1</div>
+      </div>
     </div>
-  </div>
-  <div class="footer d-flex align-items-center">
-    Play Bar
-  </div>
-  <script src="../assets/js/index.js"></script>
+
+    <footer class="footer d-flex align-items-center justify-content-center">
+      <div class="container row">
+        <div class="col-12">
+          <input type="range" id="progress-bar" min="0" max="" value="0" onchange="changeProgressBar()" />
+        </div>
+        <div class="col-12 row">
+          <div class="col-4"></div>
+          <div class="col-4 d-flex justify-content-center">
+            <button id="playBtn" class="playBtn"><i id="playicon" class="fas fa-play"></i></button>
+          </div>
+          <div class="col-4"></div>
+        </div>
+      </div>
+    </footer>
+    <script src="../assets/js/index.js"></script>
+  </main>
 </body>
 
 </html>

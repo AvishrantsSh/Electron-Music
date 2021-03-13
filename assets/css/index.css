@@ -1,33 +1,38 @@
-body{
-    padding-top: 10px;
+#leftpane{
+    height: 90vh;
+    background-color: purple;
+}
+#rightpane{
+    height: 90vh;
     background-color: #333;
-    color: white;
 }
-#stickynav{
-    text-align: right;
-    width: 100vw;
-    margin: 0;
-    /* -webkit-app-region: drag; */
+/* Player Config */
+#progress-bar{
+    width: 100%;
+    height: 5px;
 }
-.ctrlBtn{
+.playBtn{
+    padding: 0.4em;
+    border-radius: 50%;
+    width: fit-content;
     background-color: transparent;
     border: 0;
     outline: none;
     transition: all 0.2s;
 }
-.ctrlBtn i{
-    font-size: 18px;
+.playBtn i{
+    font-size: 1.4em;
+    width: 1.4em;
+    text-align: center;
+    line-height: 1.4em;
     color: white;
+    transition: all 0.2s;
 }
 
-.ctrlBtn:hover{
-    background-color: red;
+.playBtn:hover{
+    background-color: white;
 }
-.footer{
-    position: absolute;
-    height: 10vh;
-    background-color: #222;
-    width: 100vw;
-    margin: 0;
-    bottom: 0;
+
+.playBtn:hover i{
+    color: #333;
 }
