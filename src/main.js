@@ -31,16 +31,15 @@ const createWindow = () => {
       contextIsolation: false,
     }
   });
-  // mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Background Task
-  workerWindow = new BrowserWindow({
-    width: 300,
-    height: 300,
-    webPreferences: { nodeIntegration: true, contextIsolation: false }
-  });
+  // workerWindow = new BrowserWindow({
+  //   show: false,
+  //   webPreferences: { nodeIntegration: true, contextIsolation: false }
+  // });
 
-  workerWindow.loadFile(`src/worker.html`);
+  // workerWindow.loadFile(`src/worker.html`);
 
 
   // Load when content is ready
@@ -56,7 +55,7 @@ const createWindow = () => {
   });
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
