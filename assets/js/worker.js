@@ -7,7 +7,6 @@ const mlib_path = 'music-lib'
 const mlib = new MStore({
     configName: mlib_path,
     defaults: {
-        total: 0,
         mdir: [],
         mpaths: [],
     }

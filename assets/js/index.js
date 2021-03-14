@@ -61,7 +61,7 @@ addM.addEventListener('click', function () {
         width: 400,
         height: 320,
         alwaysOnTop: true,
-        frame: false,
+        // frame: false,
         show: false,
         webPreferences: {
             nodeIntegration: true,
