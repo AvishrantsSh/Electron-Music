@@ -7,14 +7,14 @@ const mlib_path = 'music-lib'
 const mlib = new MStore({
     configName: mlib_path,
     defaults: {
-        total: 1,
-        path: ['something is there'],
+        total: 0,
+        mdir: [],
+        mpaths: [],
     }
 });
 
 let total = mlib.get('total')
-let path = mlib.get('path')
+let  mdir = mlib.get('path')
 console.log(total)
-console.log(path[0])
 
 
