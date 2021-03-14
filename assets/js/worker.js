@@ -12,8 +12,7 @@ const mlib = new MStore({
     }
 });
 
-let total = mlib.get('total')
-let  mdir = mlib.get('path')
+let  mdir = mlib.get('mdir')
 console.log(total)
 
 
