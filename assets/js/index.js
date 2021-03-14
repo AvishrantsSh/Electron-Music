@@ -55,9 +55,10 @@ addM.addEventListener('click', function () {
     const modalPath = path.join('file://', __dirname, 'pathdef.html')
 
     let win = new remote.BrowserWindow({
-        width: 400,
+        backgroundColor: '#333',
         parent: currWin,
         modal: true,
+        width: 400,
         height: 320,
         alwaysOnTop: true,
         frame: false,

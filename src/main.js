@@ -21,6 +21,7 @@ const createWindow = () => {
   let { width, height } = userpref.get('windowBounds');
 
   mainWindow = new BrowserWindow({
+    backgroundColor: '#333',
     width: width,
     height: height,
     frame: false,
