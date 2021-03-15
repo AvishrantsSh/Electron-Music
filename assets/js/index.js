@@ -27,7 +27,16 @@ const playicon = document.getElementById('playicon')
 
 // Misc
 const addM = document.getElementById('folder_pick')
+const mtable = document.getElementById('mtable')
 const currWin = remote.getCurrentWindow()
+const thead_layout = `
+    <thead>
+        <tr>
+            <th class="col-xs-3">SNo </th>
+            <th class="col-xs-9">Song </th>
+        </tr>
+    </thead>`;
+
 
 closeBtn.addEventListener('click', function () {
     currWin.close()
@@ -86,6 +95,7 @@ addM.addEventListener('click', function () {
     win.once('ready-to-show', () => {
         win.show()
     })
+
     win.on('close', () => { win = null })
     win.loadURL(modalPath)
     win.show()
@@ -94,16 +104,45 @@ addM.addEventListener('click', function () {
 refreshBtn.addEventListener('click', function () {
     let mdir = mlib.get('mdir')
     if (mdir.length > 0) {
-        console.log("Found " + mdir.length + " dir(s)")
+        console.log("Reindexing Songs. Erased current data (" + mlib.get('mpaths').length + " song(s))")
         mdir.forEach(function (mpath, index) {
             console.log("Reading dir at " + mpath)
             fs.readdir(mpath, (err, files) => {
+                var tmparr = []
                 files.forEach(file => {
                     if (path.extname(file) == '.mp3') {
-                        console.log("Found " + file)
+                        tmparr.push(mpath + "/" + file)
+                    }
+                    if (tmparr.length > 0) {
+                        mlib.set('mpaths', tmparr)
                     }
                 });
             });
         });
     }
 })
+
+function initread() {
+    let mpaths = mlib.get('mpaths')
+    let total = mpaths.length
+    if (total == 0) {
+        mtable.innerHTML = `
+            <tr>
+                <td> Oh Snap. No Music Data Found</td>
+            </tr>`
+    }
+    else {
+        let tmp = thead_layout
+        mpaths.forEach(function (path, index) {
+            tmp += `
+                <tr>
+                    <td class="col-xs-3">`+ index + `</td>
+                    <td class="col-xs-9">`+ path + `</td>
+                </tr>`
+        })
+
+        mtable.innerHTML = tmp
+    }
+}
+
+window.onload = initread

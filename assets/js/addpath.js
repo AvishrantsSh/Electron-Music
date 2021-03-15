@@ -25,10 +25,16 @@ closeBtn.addEventListener('click', function () {
 addpth.addEventListener('click', function () {
     // console.log(mlib.get('mdir'))
     var path = remote.dialog.showOpenDialog({ properties: ['openDirectory'] }).then(result => {
-        if(result.canceled == false){
+        if (result.canceled == false) {
             var currArr = mlib.get('mdir')
-            currArr.push(result.filePaths[0])
-            mlib.set('mdir', currArr)
+            var found = currArr.indexOf(result.filePaths[0])
+            if (found == -1) {
+                currArr.push(result.filePaths[0])
+                mlib.set('mdir', currArr)
+            }
+            else{
+                console.log("Path Already Exists!")
+            }
         }
     }).catch(err => {
         console.log(err)

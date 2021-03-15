@@ -36,3 +36,20 @@
 .playBtn:hover i{
     color: #333;
 }
+
+/* Table Properties */
+.table-fixed thead {
+    width: auto;
+}
+.table-fixed tbody {
+    height: 70vh;
+    overflow-y: auto;
+    width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr{
+    display: block;
+}
+
+/* .table-fixed tbody td, .table-fixed thead > tr> th {
+    float: left;
+} */
