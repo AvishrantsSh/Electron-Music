@@ -22,6 +22,7 @@
 
 <body>
   <main>
+
     <header>
       <nav id="stickynav">
         <button id="minBtn" class="ctrlBtn"><i class="fas fa-minus"></i></button>
@@ -51,11 +52,15 @@
       <div class="container row">
         <div class="col-12">
           <input type="range" id="progress-bar" min="0" max="" value="0" onchange="changeProgressBar()" />
+          <span id="music"></span>
         </div>
         <div class="col-12 row">
           <div class="col-4"></div>
           <div class="col-4 d-flex justify-content-center">
             <button id="playBtn" class="playBtn"><i id="playicon" class="fas fa-play"></i></button>
+            <audio controls>
+              <source src="/media/avishrant/7C042C11042BCCC8/Users/Avishrant/Music/Ami Mishra - Hasi - Male Version.mp3">
+            </audio>
           </div>
           <div class="col-4"></div>
         </div>

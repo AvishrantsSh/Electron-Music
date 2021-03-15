@@ -1,6 +1,6 @@
 #leftpane{
     height: 90vh;
-    background-color: purple;
+    background-color: #222;
 }
 #rightpane{
     height: 90vh;
@@ -48,8 +48,13 @@
 }
 .table-fixed thead, .table-fixed tbody, .table-fixed tr{
     display: block;
+    color: white;
 }
 
 /* .table-fixed tbody td, .table-fixed thead > tr> th {
     float: left;
 } */
+.table-fixed tr:hover{
+    background-color: #444;
+    cursor: pointer;
+}

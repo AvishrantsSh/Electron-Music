@@ -30,6 +30,7 @@ const createWindow = () => {
       nodeIntegration: true,
       enableRemoteModule: true,
       contextIsolation: false,
+      webSecurity: false,
     }
   });
   mainWindow.loadURL(`file://${__dirname}/index.html`);

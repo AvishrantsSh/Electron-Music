@@ -28,7 +28,12 @@ const playicon = document.getElementById('playicon')
 // Misc
 const addM = document.getElementById('folder_pick')
 const mtable = document.getElementById('mtable')
+
+let curr_track = document.createElement('audio');
+let is_playing = false
+
 const currWin = remote.getCurrentWindow()
+
 const thead_layout = `
     <thead>
         <tr>
@@ -63,13 +68,17 @@ resBtn.addEventListener('click', function () {
 })
 
 playBtn.addEventListener('click', function () {
-    if (playicon.classList.contains("fa-play")) {
+    if (is_playing) {
         playicon.classList.remove("fa-play")
         playicon.classList.add("fa-pause")
+        pauseTrack()
+        is_playing = false
     }
     else {
         playicon.classList.add("fa-play")
         playicon.classList.remove("fa-pause")
+        playTrack()
+        is_playing = true
     }
 })
 
@@ -121,6 +130,25 @@ refreshBtn.addEventListener('click', function () {
         });
     }
 })
+function pauseTrack(){
+    curr_track.pause();
+    is_playing = false;
+}
+
+function playTrack(){
+    curr_track.play();
+    is_playing = true;
+}
+
+function playSong(index) {
+    let mpaths = mlib.get('mpaths')
+    let audpath = mpaths[index]
+    curr_track.src = audpath
+    console.log(audpath)
+    curr_track.load();
+    curr_track.play()
+    is_playing = true
+}
 
 function initread() {
     let mpaths = mlib.get('mpaths')
@@ -136,8 +164,8 @@ function initread() {
         mpaths.forEach(function (path, index) {
             let plist = path.split("/")
             tmp += `
-                <tr>
-                    <td class="col-xs-3">`+ index + `</td>
+                <tr onclick="playSong(`+ index + `)">
+                    <td class="col-xs-3">`+ (index + 1) + `</td>
                     <td class="col-xs-9">`+ plist.pop() + `</td>
                 </tr>`
         })
