@@ -134,10 +134,11 @@ function initread() {
     else {
         let tmp = thead_layout
         mpaths.forEach(function (path, index) {
+            let plist = path.split("/")
             tmp += `
                 <tr>
                     <td class="col-xs-3">`+ index + `</td>
-                    <td class="col-xs-9">`+ path + `</td>
+                    <td class="col-xs-9">`+ plist.pop() + `</td>
                 </tr>`
         })
 

@@ -12,6 +12,7 @@
 
   <!-- External Scripts -->
   <script src="https://kit.fontawesome.com/adbd72eac2.js" crossorigin="anonymous"></script>
+
   <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- My Styles -->
@@ -32,7 +33,14 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-4" id="leftpane"><button id="refreshBtn">Refresh</button></div>
+        <!-- Left Pane -->
+        <div class="col-4" id="leftpane">
+          <h2>Music</h2>
+          <table class="table table-fixed" id="mtable"></table>
+          <button id="refreshBtn">Refresh</button>
+        </div>
+
+        <!-- Right Pane -->
         <div class="col-8" id="rightpane">
           Not finding your music? <button id="folder_pick">Add Now!</button>
         </div>
