@@ -2,16 +2,7 @@ const electron = require('electron')
 const path = require('path')
 const MStore = require('../assets/js/mstore.js');
 const remote = electron.remote
-const mlib_path = 'music-lib'
-
-const mlib = new MStore({
-    configName: mlib_path,
-    defaults: {
-        total: 0,
-        mdir: [],
-        mpaths: [],
-    }
-});
+const ipc = electron.ipcRenderer
 
 // Control Buttons
 const closeBtn = document.getElementById('closeBtn')
@@ -23,6 +14,14 @@ closeBtn.addEventListener('click', function () {
 })
 
 addpth.addEventListener('click', function () {
+    let mlib_path = 'music-lib'
+    let mlib = new MStore({
+        configName: mlib_path,
+        defaults: {
+            mdir: [],
+            mpaths: [],
+        }
+    });
     // console.log(mlib.get('mdir'))
     var path = remote.dialog.showOpenDialog({ properties: ['openDirectory'] }).then(result => {
         if (result.canceled == false) {
@@ -31,6 +30,7 @@ addpth.addEventListener('click', function () {
             if (found == -1) {
                 currArr.push(result.filePaths[0])
                 mlib.set('mdir', currArr)
+                ipc.send('add-finished', true)
             }
             else{
                 console.log("Path Already Exists!")

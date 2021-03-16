@@ -1,20 +1,12 @@
 const electron = require('electron')
 const path = require('path')
-const dataurl = require('dataurl')
-
 const remote = electron.remote
 const fs = require('fs');
+const ipc = electron.ipcRenderer
 
 // All storage stuff to be done here
 const MStore = require('../assets/js/mstore.js');
 const mlib_path = 'music-lib'
-const mlib = new MStore({
-    configName: mlib_path,
-    defaults: {
-        mdir: [],
-        mpaths: [],
-    }
-});
 
 // Control Buttons
 const closeBtn = document.getElementById('closeBtn')
@@ -30,10 +22,7 @@ const playicon = document.getElementById('playicon')
 // Misc
 const addM = document.getElementById('folder_pick')
 const mtable = document.getElementById('mtable')
-
-let curr_track = document.createElement('audio');
 let is_playing = false
-
 const currWin = remote.getCurrentWindow()
 
 const thead_layout = `
@@ -71,15 +60,11 @@ resBtn.addEventListener('click', function () {
 
 playBtn.addEventListener('click', function () {
     if (is_playing) {
-        playicon.classList.remove("fa-play")
-        playicon.classList.add("fa-pause")
-        pauseTrack()
+        ipc.send("playback-toggle", true)
         is_playing = false
     }
     else {
-        playicon.classList.add("fa-play")
-        playicon.classList.remove("fa-pause")
-        playTrack()
+        ipc.send("playback-toggle", true)
         is_playing = true
     }
 })
@@ -113,53 +98,19 @@ addM.addEventListener('click', function () {
 })
 
 refreshBtn.addEventListener('click', function () {
-    let mdir = mlib.get('mdir')
-    if (mdir.length > 0) {
-        console.log("Reindexing Songs. Erased current data (" + mlib.get('mpaths').length + " song(s))")
-        mdir.forEach(function (mpath, index) {
-            console.log("Reading dir at " + mpath)
-            fs.readdir(mpath, (err, files) => {
-                var tmparr = []
-                files.forEach(file => {
-                    if (path.extname(file) == '.mp3') {
-                        tmparr.push(mpath + "/" + file)
-                    }
-                    if (tmparr.length > 0) {
-                        mlib.set('mpaths', tmparr)
-                    }
-                });
-            });
-        });
-    }
+    reindex()
 })
-function pauseTrack() {
-    curr_track.pause();
-    is_playing = false;
-}
-
-function playTrack() {
-    curr_track.play();
-    is_playing = true;
-}
-
-function playSong(index) {
-    let mpaths = mlib.get('mpaths')
-    let audpath = mpaths[index]
-    createSongObject(audpath)
-        .then(data => {
-            curr_track.src = data
-            curr_track.load();
-            curr_track.play()
-            console.log(data)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-
-    is_playing = true
-}
 
 function initread() {
+    let mlib = new MStore({
+        configName: mlib_path,
+        defaults: {
+            mdir: [],
+            mpaths: [],
+        }
+    });
+
+    resetdb()
     let mpaths = mlib.get('mpaths')
     let total = mpaths.length
     if (total == 0) {
@@ -184,13 +135,62 @@ function initread() {
     }
 }
 
-const createSongObject = (filepath) => {
-    return new Promise((resolve, reject) => {
-        fs.readFile(filepath, (err, data) => {
-            if (err) { reject(err) }
-            resolve(dataurl.convert({ data, mimetype: 'audio/mp3' }))
-        })
-    })
+function reindex() {
+    let mlib = new MStore({
+        configName: mlib_path,
+        defaults: {
+            mdir: [],
+            mpaths: [],
+        }
+    });
+
+    let mdir = mlib.get('mdir')
+
+    if (mdir.length > 0) {
+        console.log("Reindexing Songs. Erased current data (" + mlib.get('mpaths').length + " song(s))")
+        mdir.forEach(function (mpath, index) {
+            console.log("Reading dir at " + mpath)
+            fs.readdir(mpath, (err, files) => {
+                var tmparr = []
+                files.forEach(file => {
+                    if (path.extname(file) == '.mp3') {
+                        tmparr.push(mpath + "/" + file)
+                    }
+                    if (tmparr.length > 0) {
+                        mlib.set('mpaths', tmparr)
+                    }
+                });
+            });
+        });
+        console.log('Found ' + mlib.get('mpaths').length + " songs")
+        initread()
+    }
+    else {
+        console.log('Empty Dir')
+    }
+}
+
+function playSong(index) {
+    ipc.send("play-track", index)
+}
+
+/* Use this function to reset db */
+function resetdb() {
+
+    let mlib = new MStore({
+        configName: mlib_path,
+        defaults: {
+            mdir: [],
+            mpaths: [],
+        }
+    });
+
+    mlib.set('mdir', [])
+    mlib.set('mpaths', [])
 }
 
 window.onload = initread
+
+ipc.on('add-finished', function (event, arg) {
+    reindex()
+})

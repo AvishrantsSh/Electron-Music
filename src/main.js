@@ -1,12 +1,14 @@
-import { app, BrowserWindow } from 'electron';
-import { createTargets } from 'electron-builder';
-
+import { app, BrowserWindow, Tray, Menu } from 'electron';
+const ipc = require('electron').ipcMain
+var path = require('path')
 const MStore = require('../assets/js/mstore.js');
 
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
 
+
+// Functionality begins here
 let mainWindow, workerWindow;
 
 const userpref = new MStore({
@@ -29,6 +31,7 @@ const createWindow = () => {
     minWidth: 1280,
     frame: false,
     show: false,
+    icon: __dirname + '/icons/logo_64.png',
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
@@ -39,12 +42,14 @@ const createWindow = () => {
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Background Task
-  // workerWindow = new BrowserWindow({
-  //   show: false,
-  //   webPreferences: { nodeIntegration: true, contextIsolation: false }
-  // });
+  workerWindow = new BrowserWindow({
+    // height: 500,
+    // width: 1000,
+    show: false,
+    webPreferences: { nodeIntegration: true, contextIsolation: false }
+  });
 
-  // workerWindow.loadFile(`src/worker.html`);
+  workerWindow.loadFile(`src/worker.html`);
 
 
   // Load when content is ready
@@ -71,6 +76,31 @@ const createWindow = () => {
 app.on('ready', () => {
   app.allowRendererProcessReuse = true
   createWindow()
+
+  let tray = new Tray(path.join(__dirname, '/icons/logo_white.png'))
+  const menu = Menu.buildFromTemplate([
+    {
+      label: 'Play/Pause',
+      click() { workerWindow.webContents.send('toggle', true) }
+    },
+    {
+      label: 'Next',
+      click() { console.log('Comming Soon!') }
+    },
+    {
+      label: 'Previous',
+      click() { console.log('Comming Soon!')}
+    },
+    { type: 'separator' },
+    {
+      label: 'Quit',
+      click() { app.quit(); }
+    }
+  ])
+
+  tray.setToolTip('MyApp')
+  tray.setContextMenu(menu)
+
 });
 
 // Quit when all windows are closed.
@@ -85,3 +115,15 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+ipc.on('playback-toggle', function (event, arg) {
+  workerWindow.webContents.send('toggle', arg)
+})
+
+ipc.on('play-track', function (event, arg) {
+  workerWindow.webContents.send('track', arg)
+})
+
+ipc.on('add-finished', function (event, arg) {
+  mainWindow.webContents.send('add-finished', arg)
+})
