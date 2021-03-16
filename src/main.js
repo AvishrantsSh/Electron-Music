@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Tray, Menu } from 'electron';
+import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron';
 const ipc = require('electron').ipcMain
 var path = require('path')
 const MStore = require('../assets/js/mstore.js');
@@ -76,8 +76,8 @@ const createWindow = () => {
 app.on('ready', () => {
   app.allowRendererProcessReuse = true
   createWindow()
-
-  let tray = new Tray(path.join(__dirname, '/icons/logo_white.png'))
+  let iconpath = path.join(__dirname, '/icons/logo_white.png')
+  let tray = new Tray(nativeImage.createFromPath(iconpath))
   const menu = Menu.buildFromTemplate([
     {
       label: 'Play/Pause',
@@ -89,7 +89,7 @@ app.on('ready', () => {
     },
     {
       label: 'Previous',
-      click() { console.log('Comming Soon!')}
+      click() { console.log('Comming Soon!') }
     },
     { type: 'separator' },
     {
