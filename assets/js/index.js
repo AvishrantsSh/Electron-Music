@@ -102,6 +102,9 @@ refreshBtn.addEventListener('click', function () {
 })
 
 function initread() {
+
+    // resetdb()
+    
     let mlib = new MStore({
         configName: mlib_path,
         defaults: {
@@ -110,8 +113,9 @@ function initread() {
         }
     });
 
-    resetdb()
+    console.log('Fetching')
     let mpaths = mlib.get('mpaths')
+    console.log(mpaths)
     let total = mpaths.length
     if (total == 0) {
         mtable.innerHTML = `
@@ -156,17 +160,19 @@ function reindex() {
                     if (path.extname(file) == '.mp3') {
                         tmparr.push(mpath + "/" + file)
                     }
-                    if (tmparr.length > 0) {
-                        mlib.set('mpaths', tmparr)
-                    }
                 });
+
+                if (tmparr.length > 0) {
+                    mlib.set('mpaths', tmparr)
+                    console.log('Found ' + mlib.get('mpaths').length + " songs")
+                }
+                initread()
             });
         });
-        console.log('Found ' + mlib.get('mpaths').length + " songs")
-        initread()
     }
     else {
         console.log('Empty Dir')
+        initread()
     }
 }
 
@@ -176,7 +182,6 @@ function playSong(index) {
 
 /* Use this function to reset db */
 function resetdb() {
-
     let mlib = new MStore({
         configName: mlib_path,
         defaults: {
@@ -187,6 +192,8 @@ function resetdb() {
 
     mlib.set('mdir', [])
     mlib.set('mpaths', [])
+    console.log('Reset Complete')
+    console.log(mlib.get('mpaths'))
 }
 
 window.onload = initread
