@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron';
+import { createTargets } from 'electron-builder';
 
 const MStore = require('../assets/js/mstore.js');
 
@@ -12,7 +13,7 @@ const userpref = new MStore({
   configName: 'user-preferences',
   defaults: {
     // 800x600 is the default size of our window
-    windowBounds: { width: 800, height: 600 }
+    windowBounds: { width: 1280, height: 720 }
   }
 });
 
@@ -24,6 +25,8 @@ const createWindow = () => {
     backgroundColor: '#333',
     width: width,
     height: height,
+    minHeight: 720,
+    minWidth: 1280,
     frame: false,
     show: false,
     webPreferences: {
@@ -65,7 +68,10 @@ const createWindow = () => {
   });
 };
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  app.allowRendererProcessReuse = true
+  createWindow()
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

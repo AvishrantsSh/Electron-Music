@@ -4,6 +4,7 @@ header{
     width: 100vw;
     height: 40px;
     -webkit-app-region: drag;
+    background-color: #222;
 }
 #stickynav{
     position: fixed;

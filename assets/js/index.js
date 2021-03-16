@@ -169,7 +169,8 @@ function initread() {
             </tr>`
     }
     else {
-        let tmp = thead_layout
+        // let tmp = thead_layout
+        let tmp
         mpaths.forEach(function (path, index) {
             let plist = path.split("/")
             tmp += `
