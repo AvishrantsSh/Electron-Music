@@ -1,5 +1,7 @@
 const electron = require('electron')
 const path = require('path')
+const dataurl = require('dataurl')
+
 const remote = electron.remote
 const fs = require('fs');
 
@@ -130,12 +132,12 @@ refreshBtn.addEventListener('click', function () {
         });
     }
 })
-function pauseTrack(){
+function pauseTrack() {
     curr_track.pause();
     is_playing = false;
 }
 
-function playTrack(){
+function playTrack() {
     curr_track.play();
     is_playing = true;
 }
@@ -143,10 +145,17 @@ function playTrack(){
 function playSong(index) {
     let mpaths = mlib.get('mpaths')
     let audpath = mpaths[index]
-    curr_track.src = audpath
-    console.log(audpath)
-    curr_track.load();
-    curr_track.play()
+    createSongObject(audpath)
+        .then(data => {
+            curr_track.src = data
+            curr_track.load();
+            curr_track.play()
+            console.log(data)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+
     is_playing = true
 }
 
@@ -172,6 +181,15 @@ function initread() {
 
         mtable.innerHTML = tmp
     }
+}
+
+const createSongObject = (filepath) => {
+    return new Promise((resolve, reject) => {
+        fs.readFile(filepath, (err, data) => {
+            if (err) { reject(err) }
+            resolve(dataurl.convert({ data, mimetype: 'audio/mp3' }))
+        })
+    })
 }
 
 window.onload = initread
