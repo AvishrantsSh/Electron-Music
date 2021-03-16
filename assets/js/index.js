@@ -14,6 +14,7 @@ const minBtn = document.getElementById('minBtn')
 const resBtn = document.getElementById('resBtn')
 const playBtn = document.getElementById('playBtn')
 const refreshBtn = document.getElementById('refreshBtn')
+const resetBtn = document.getElementById('resetBtn')
 
 // Icon Set
 const maxmin = document.getElementById('maxmin')
@@ -45,7 +46,6 @@ minBtn.addEventListener('click', function () {
 resBtn.addEventListener('click', function () {
     if (currWin.isMaximized()) {
         currWin.unmaximize()
-
         maxmin.classList.remove("fa-square");
         maxmin.classList.add("fa-clone");
     }
@@ -79,8 +79,9 @@ addM.addEventListener('click', function () {
         width: 400,
         height: 320,
         alwaysOnTop: true,
-        // frame: false,
+        frame: false,
         show: false,
+        resizable: false,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -97,14 +98,10 @@ addM.addEventListener('click', function () {
     win.show()
 })
 
-refreshBtn.addEventListener('click', function () {
-    reindex()
-})
+refreshBtn.addEventListener('click', reindex)
+resetBtn.addEventListener('click', resetdb)
 
-function initread() {
-
-    // resetdb()
-    
+function initread() {    
     let mlib = new MStore({
         configName: mlib_path,
         defaults: {
@@ -113,9 +110,8 @@ function initread() {
         }
     });
 
-    console.log('Fetching')
+    console.log('Fetching Songs..')
     let mpaths = mlib.get('mpaths')
-    console.log(mpaths)
     let total = mpaths.length
     if (total == 0) {
         mtable.innerHTML = `
@@ -147,9 +143,7 @@ function reindex() {
             mpaths: [],
         }
     });
-
     let mdir = mlib.get('mdir')
-
     if (mdir.length > 0) {
         console.log("Reindexing Songs. Erased current data (" + mlib.get('mpaths').length + " song(s))")
         mdir.forEach(function (mpath, index) {
@@ -171,7 +165,7 @@ function reindex() {
         });
     }
     else {
-        console.log('Empty Dir')
+        console.log('No results found')
         initread()
     }
 }
@@ -193,11 +187,9 @@ function resetdb() {
     mlib.set('mdir', [])
     mlib.set('mpaths', [])
     console.log('Reset Complete')
-    console.log(mlib.get('mpaths'))
+    reindex()
 }
 
 window.onload = initread
 
-ipc.on('add-finished', function (event, arg) {
-    reindex()
-})
+ipc.on('add-finished', reindex)
