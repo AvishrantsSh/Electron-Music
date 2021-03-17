@@ -45,9 +45,9 @@ const createWindow = () => {
 
   // Background Task
   workerWindow = new BrowserWindow({
-    height: 500,
-    width: 1000,
-    // show: false,
+    // height: 500,
+    // width: 1000,
+    show: false,
     webPreferences: { nodeIntegration: true, contextIsolation: false }
   });
 
