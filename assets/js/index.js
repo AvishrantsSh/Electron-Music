@@ -60,11 +60,11 @@ resBtn.addEventListener('click', function () {
 
 playBtn.addEventListener('click', function () {
     if (is_playing) {
-        ipc.send("playback-toggle", true)
+        ipc.send("playback-toggle")
         is_playing = false
     }
     else {
-        ipc.send("playback-toggle", true)
+        ipc.send("playback-toggle")
         is_playing = true
     }
 })

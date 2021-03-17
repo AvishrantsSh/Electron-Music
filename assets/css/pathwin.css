@@ -4,3 +4,24 @@
 header{
     background: #333;
 }
+/* Table Properties */
+.table-fixed thead {
+    width: 400px;
+}
+.table-fixed tbody {
+    height: 200px;
+    overflow-y: auto;
+    width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr{
+    display: block;
+    color: white;
+}
+
+/* .table-fixed tbody td, .table-fixed thead > tr> th {
+    float: left;
+} */
+.table-fixed tr:hover{
+    background-color: #444;
+    cursor: pointer;
+}

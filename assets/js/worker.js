@@ -7,8 +7,15 @@ const ipc = electron.ipcRenderer
 
 // Config Files
 const MStore = require('../assets/js/mstore.js');
+const mlib_path = 'music-lib'
 
 let curr_track = document.createElement('audio');
+curr_track.addEventListener("ended", () => { nextSong() });
+let curr_index = -1;
+
+// Minor Configurations
+let shuffle = false /* Is Shuffle Enabled */
+let loop = 0 /* Loop Type (0 - No loop, 1 - Loop Queue, 2 - Loop Track)*/
 let is_playing = false
 
 function pauseTrack() {
@@ -17,12 +24,16 @@ function pauseTrack() {
 }
 
 function resumeTrack() {
-    curr_track.play();
+    if (!is_playing && curr_index == -1) {
+        playSong(0)
+    }
+    else {
+        curr_track.play();
+    }
     is_playing = true;
 }
 
 function playSong(index) {
-    let mlib_path = 'music-lib'
     let mlib = new MStore({
         configName: mlib_path,
         defaults: {
@@ -30,21 +41,75 @@ function playSong(index) {
             mpaths: [],
         }
     });
+    
+    // Reset Current Progress
+    curr_track.pause()
+    curr_track.src = ""
+    curr_track.load()
+    is_playing = false
 
     let mpaths = mlib.get('mpaths')
-    let audpath = mpaths[index]
+    if (index >= mpaths.length || index < 0) {
+        curr_index = -1
+        console.log('Queue Finished')
+        return
+    }
+
+    curr_index = index
+    let audpath = mpaths[curr_index]
     createSongObject(audpath)
         .then(data => {
             curr_track.src = data
             curr_track.load();
             curr_track.play()
-            console.log(data)
+            is_playing = true
         })
         .catch(err => {
             console.log(err)
         })
 
     is_playing = true
+}
+
+function nextSong() {
+    let mlib = new MStore({
+        configName: mlib_path,
+        defaults: {
+            mdir: [],
+            mpaths: [],
+        }
+    });
+    let mpaths = mlib.get('mpaths')
+    if (loop == 0) playSong(curr_index + 1)
+    if (loop == 1) playSong((curr_index + 1) % mpaths.length)
+    if (loop == 2) playSong((curr_index))
+}
+
+function nextSong() {
+    let mlib = new MStore({
+        configName: mlib_path,
+        defaults: {
+            mdir: [],
+            mpaths: [],
+        }
+    });
+    let mpaths = mlib.get('mpaths')
+    if (loop == 0) playSong(curr_index + 1)
+    if (loop == 1) playSong((curr_index + 1) % mpaths.length)
+    if (loop == 2) playSong((curr_index))
+}
+function prevSong() {
+    let mlib = new MStore({
+        configName: mlib_path,
+        defaults: {
+            mdir: [],
+            mpaths: [],
+        }
+    });
+    let mpaths = mlib.get('mpaths')
+    if (loop == 0) playSong(curr_index - 1)
+    if (loop == 1) playSong((curr_index - 1) % mpaths.length)
+    if (loop == 2) playSong((curr_index))
 }
 
 const createSongObject = (filepath) => {
@@ -55,18 +120,19 @@ const createSongObject = (filepath) => {
         })
     })
 }
-ipc.on('toggle', function(event, arg){
-    if(is_playing) pauseTrack()
+
+ipc.on('toggle', () => {
+    if (is_playing) pauseTrack()
     else resumeTrack()
 })
 
-ipc.on('resume', function (event, arg) {
-    resumeTrack()
-})
+ipc.on('resume', () => { resumeTrack() })
 
-ipc.on('pause', function (event, arg) {
-    pauseTrack()
-})
+ipc.on('pause', () => { pauseTrack() })
+
+ipc.on('next-song', () => { nextSong() })
+
+ipc.on('prev-song', () => { prevSong() })
 
 ipc.on('track', function (event, arg) {
     playSong(arg)

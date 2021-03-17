@@ -39,16 +39,15 @@ const createWindow = () => {
       nodeIntegration: true,
       enableRemoteModule: true,
       contextIsolation: false,
-      webSecurity: false,
     }
   });
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Background Task
   workerWindow = new BrowserWindow({
-    // height: 500,
-    // width: 1000,
-    show: false,
+    height: 500,
+    width: 1000,
+    // show: false,
     webPreferences: { nodeIntegration: true, contextIsolation: false }
   });
 
@@ -79,20 +78,20 @@ const createWindow = () => {
 app.on('ready', () => {
   app.allowRendererProcessReuse = true
   createWindow()
-  
+
   tray = new Tray(nativeImage.createFromPath(iconpath))
   const menu = Menu.buildFromTemplate([
     {
       label: 'Play/Pause',
-      click() { workerWindow.webContents.send('toggle', true) }
+      click() { workerWindow.webContents.send('toggle') }
     },
     {
       label: 'Next',
-      click() { console.log('Comming Soon!') }
+      click() { workerWindow.webContents.send('next-song') }
     },
     {
       label: 'Previous',
-      click() { console.log('Comming Soon!') }
+      click() { workerWindow.webContents.send('prev-song') }
     },
     { type: 'separator' },
     {
@@ -119,14 +118,10 @@ app.on('activate', () => {
   }
 });
 
-ipc.on('playback-toggle', function (event, arg) {
-  workerWindow.webContents.send('toggle', arg)
-})
+ipc.on('playback-toggle', () => { workerWindow.webContents.send('toggle') })
 
 ipc.on('play-track', function (event, arg) {
   workerWindow.webContents.send('track', arg)
 })
 
-ipc.on('add-finished', function (event, arg) {
-  mainWindow.webContents.send('add-finished', arg)
-})
+ipc.on('add-finished', () => { mainWindow.webContents.send('add-finished') })

@@ -7,6 +7,7 @@ const ipc = electron.ipcRenderer
 // Control Buttons
 const closeBtn = document.getElementById('closeBtn')
 const addpth = document.getElementById('addpath')
+const mlib_path = 'music-lib'
 
 closeBtn.addEventListener('click', function () {
     var window = remote.getCurrentWindow()
@@ -14,7 +15,6 @@ closeBtn.addEventListener('click', function () {
 })
 
 addpth.addEventListener('click', function () {
-    let mlib_path = 'music-lib'
     let mlib = new MStore({
         configName: mlib_path,
         defaults: {
@@ -30,9 +30,9 @@ addpth.addEventListener('click', function () {
             if (found == -1) {
                 currArr.push(result.filePaths[0])
                 mlib.set('mdir', currArr)
-                ipc.send('add-finished', true)
+                ipc.send('add-finished')
             }
-            else{
+            else {
                 console.log("Path Already Exists!")
             }
         }
@@ -40,3 +40,31 @@ addpth.addEventListener('click', function () {
         console.log(err)
     });
 })
+
+function fetch_dir() {
+    let mlib = new MStore({
+        configName: mlib_path,
+        defaults: {
+            mdir: [],
+            mpaths: [],
+        }
+    });
+    let mdir = mlib.get('mdir')
+    let table = document.getElementById('dir_holder')
+    if (mdir.length == 0) {
+        table.innerHTML = `
+            <tr>
+                <td> Oh Snap. No Music Data Found</td>
+            </tr>`
+    }
+    else {
+        table.innerHTML = ""
+        mdir.forEach(function (path, index) {
+            table.innerHTML += `<tr onclick="playSong(` + index + `)">
+                    <td class="col-xs-12">`+ path + `</td>
+                </tr>`
+        });
+    }
+}
+
+window.onload = fetch_dir
