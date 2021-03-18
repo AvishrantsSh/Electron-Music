@@ -1,8 +1,11 @@
+// Imports !!
 const electron = require('electron')
 const path = require('path')
 const remote = electron.remote
 const fs = require('fs');
 const dataurl = require('dataurl')
+let Howler = require('howler');
+const howl = Howler.howl
 const ipc = electron.ipcRenderer
 
 // ID3 Extractor
@@ -13,8 +16,7 @@ const util = require('util');
 const MStore = require('../assets/js/mstore.js');
 const mlib_path = 'music-lib'
 
-let curr_track = document.createElement('audio');
-curr_track.addEventListener("ended", () => { nextSong() });
+let curr_track
 let curr_index = -1;
 
 // Minor Configurations
@@ -49,11 +51,10 @@ function playSong(index) {
     });
 
     // Reset Current Progress
-    curr_track.pause()
-    curr_track.src = ""
-    curr_track.load()
-    is_playing = false
-
+    if (is_playing) {
+        curr_track.pause()
+        is_playing = false
+    }
     let mpaths = mlib.get('mpaths')
 
     if (index >= mpaths.length || index < 0) {
@@ -70,8 +71,10 @@ function playSong(index) {
 
     createSongObject(audpath)
         .then(data => {
-            curr_track.src = data
-            curr_track.load();
+            curr_track = new Howl({
+                src: [data],
+                onend: nextSong
+            });
             curr_track.play()
             is_playing = true
         })
@@ -85,6 +88,8 @@ function playSong(index) {
 async function id3tags(audpath) {
     try {
         const metadata = await mm.parseFile(audpath);
+        document.title = metadata.common.title
+        document.descr
         ipc.send('id3-result', metadata.common)
     } catch (error) {
         console.error(error.message);
