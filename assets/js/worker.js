@@ -4,8 +4,6 @@ const path = require('path')
 const remote = electron.remote
 const fs = require('fs');
 const dataurl = require('dataurl')
-let Howler = require('howler');
-const howl = Howler.howl
 const ipc = electron.ipcRenderer
 
 // ID3 Extractor
@@ -16,7 +14,7 @@ const util = require('util');
 const MStore = require('../assets/js/mstore.js');
 const mlib_path = 'music-lib'
 
-let curr_track
+let curr_track = document.createElement('audio');
 let curr_index = -1;
 
 // Minor Configurations
@@ -25,7 +23,10 @@ let loop = 0 /* Loop Type (0 - No loop, 1 - Loop Queue, 2 - Loop Track)*/
 let is_playing = false
 
 function pauseTrack() {
-    curr_track.pause();
+    if (is_playing) {
+        curr_track.pause();
+        is_playing = false
+    }
     is_playing = false;
 }
 
@@ -53,6 +54,9 @@ function playSong(index) {
     // Reset Current Progress
     if (is_playing) {
         curr_track.pause()
+        curr_track.src = ''
+        curr_track.load();
+        curr_track.play()
         is_playing = false
     }
     let mpaths = mlib.get('mpaths')
@@ -71,10 +75,8 @@ function playSong(index) {
 
     createSongObject(audpath)
         .then(data => {
-            curr_track = new Howl({
-                src: [data],
-                onend: nextSong
-            });
+            curr_track.src = data
+            curr_track.load();
             curr_track.play()
             is_playing = true
         })
@@ -88,8 +90,7 @@ function playSong(index) {
 async function id3tags(audpath) {
     try {
         const metadata = await mm.parseFile(audpath);
-        document.title = metadata.common.title
-        document.descr
+        mediasessionUpdate(metadata.common)
         ipc.send('id3-result', metadata.common)
     } catch (error) {
         console.error(error.message);
@@ -124,6 +125,36 @@ function prevSong() {
     if (loop == 2) playSong((curr_index))
 }
 
+function mediasessionUpdate(metadata) {
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: metadata.title,
+            artist: metadata.artist,
+            album: metadata.album,
+            // artwork: [
+            //     { src: 'https://dummyimage.com/96x96', sizes: '96x96', type: 'image/png' },
+            //     { src: 'https://dummyimage.com/128x128', sizes: '128x128', type: 'image/png' },
+            //     { src: 'https://dummyimage.com/192x192', sizes: '192x192', type: 'image/png' },
+            //     { src: 'https://dummyimage.com/256x256', sizes: '256x256', type: 'image/png' },
+            //     { src: 'https://dummyimage.com/384x384', sizes: '384x384', type: 'image/png' },
+            //     { src: 'https://dummyimage.com/512x512', sizes: '512x512', type: 'image/png' },
+            // ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', resumeTrack);
+        navigator.mediaSession.setActionHandler('pause', pauseTrack);
+        // navigator.mediaSession.setActionHandler('stop', function () { /* Code excerpted. */ });
+        // navigator.mediaSession.setActionHandler('seekbackward', function () { /* Code excerpted. */ });
+        // navigator.mediaSession.setActionHandler('seekforward', function () { /* Code excerpted. */ });
+        // navigator.mediaSession.setActionHandler('seekto', function () { /* Code excerpted. */ });
+        // navigator.mediaSession.setActionHandler('skipad', function () { /* Code excerpted. */ });
+        navigator.mediaSession.setActionHandler('previoustrack', prevSong);
+        navigator.mediaSession.setActionHandler('nexttrack', nextSong);
+    }
+    else {
+        return
+    }
+}
 const createSongObject = (filepath) => {
     return new Promise((resolve, reject) => {
         fs.readFile(filepath, (err, data) => {
