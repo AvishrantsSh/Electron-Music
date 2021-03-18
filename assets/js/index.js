@@ -101,7 +101,11 @@ addM.addEventListener('click', function () {
 refreshBtn.addEventListener('click', reindex)
 resetBtn.addEventListener('click', resetdb)
 
-function initread() {    
+function initread() {
+
+    // Request sync with worker process
+    ipc.send('request-sync')
+
     let mlib = new MStore({
         configName: mlib_path,
         defaults: {
@@ -170,6 +174,10 @@ function reindex() {
     }
 }
 
+function syncWorker() {
+
+}
+
 function playSong(index) {
     ipc.send("play-track", index)
 }
@@ -190,9 +198,27 @@ function resetdb() {
     reindex()
 }
 
+function updateID3(arg) {
+    let title = document.getElementById('song-name')
+    let artist = document.getElementById('song-artist')
+    title.innerHTML = arg.title
+    artist.innerHTML = arg.artist
+}
+
 window.onload = initread
 
 ipc.on('add-finished', reindex)
 ipc.on('id3-result', function (event, arg) {
+    updateID3(arg)
+})
+ipc.on('sync-res', function (event, arg) {
     console.log(arg)
+    if (arg != null) {
+        is_playing = arg.is_playing
+        updateID3(arg)
+    }
+    else{
+        is_playing = false
+    }
+    console.log('Sync Complete')
 })

@@ -1,4 +1,8 @@
 
+*{
+    font-family: sans-serif;
+}
+
 /* Header Section */
 header{
     width: 100vw;

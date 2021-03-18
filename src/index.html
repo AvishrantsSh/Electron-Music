@@ -22,7 +22,6 @@
 
 <body>
   <main>
-
     <header>
       <nav id="stickynav">
         <button id="minBtn" class="ctrlBtn"><i class="fas fa-minus"></i></button>
@@ -50,7 +49,18 @@
 
         <!-- Right Pane -->
         <div class="col-8" id="rightpane">
-          Not finding your music? <button id="folder_pick">Add Now!</button>
+          <div class="row">
+            <span class="col-12">
+              Not finding your music? <button id="folder_pick">Add Now!</button>
+            </span>
+            <div class="col-12 d-flex flex-column align-items-center justify-content-center" id="meta-container">
+              <div id="song-cover"></div>
+              <div class="song-details text-center p-4">
+                <span id="song-name">Test123</span>
+                <span id="song-artist">XYZ123</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

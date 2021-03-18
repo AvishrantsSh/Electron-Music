@@ -15,15 +15,19 @@ const MStore = require('../assets/js/mstore.js');
 const mlib_path = 'music-lib'
 
 let curr_track = document.createElement('audio');
+curr_track.addEventListener('ended', nextSong)
 let curr_index = -1;
 
 // Minor Configurations
 let shuffle = false /* Is Shuffle Enabled */
 let loop = 0 /* Loop Type (0 - No loop, 1 - Loop Queue, 2 - Loop Track)*/
 let is_playing = false
+let metadata = null /* For Storing Current Track's Metadata */
 
 function pauseTrack() {
     if (is_playing) {
+        // Ease-in and out feature to be added here
+
         curr_track.pause();
         is_playing = false
     }
@@ -53,7 +57,7 @@ function playSong(index) {
 
     // Reset Current Progress
     if (is_playing) {
-        curr_track.pause()
+        pauseTrack()
         curr_track.src = ''
         curr_track.load();
         curr_track.play()
@@ -89,7 +93,7 @@ function playSong(index) {
 
 async function id3tags(audpath) {
     try {
-        const metadata = await mm.parseFile(audpath);
+        metadata = await mm.parseFile(audpath);
         mediasessionUpdate(metadata.common)
         ipc.send('id3-result', metadata.common)
     } catch (error) {
@@ -155,6 +159,16 @@ function mediasessionUpdate(metadata) {
         return
     }
 }
+
+function syncMain() {
+    console.log(metadata)
+    if (metadata == null){
+        ipc.send('sync-res', null)
+        return
+    }
+    ipc.send('sync-res', metadata.common)
+}
+
 const createSongObject = (filepath) => {
     return new Promise((resolve, reject) => {
         fs.readFile(filepath, (err, data) => {
@@ -169,15 +183,16 @@ ipc.on('toggle', () => {
     else resumeTrack()
 })
 
-ipc.on('resume', () => { resumeTrack() })
+ipc.on('resume', resumeTrack)
 
-ipc.on('pause', () => { pauseTrack() })
+ipc.on('pause', pauseTrack)
 
-ipc.on('next-song', () => { nextSong() })
+ipc.on('next-song', nextSong)
 
-ipc.on('prev-song', () => { prevSong() })
+ipc.on('prev-song', prevSong)
 
 ipc.on('track', function (event, arg) {
     playSong(arg)
 })
 
+ipc.on('sync-main', syncMain)
