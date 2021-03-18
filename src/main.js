@@ -48,7 +48,7 @@ const createWindow = () => {
     // height: 500,
     // width: 1000,
     show: false,
-    webPreferences: { nodeIntegration: true, contextIsolation: false }
+    webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: true }
   });
 
   workerWindow.loadFile(`src/worker.html`);
@@ -119,6 +119,10 @@ app.on('activate', () => {
 });
 
 ipc.on('playback-toggle', () => { workerWindow.webContents.send('toggle') })
+
+ipc.on('id3-result', function (event, arg) {
+  mainWindow.webContents.send('id3-result', arg)
+})
 
 ipc.on('play-track', function (event, arg) {
   workerWindow.webContents.send('track', arg)

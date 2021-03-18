@@ -193,3 +193,6 @@ function resetdb() {
 window.onload = initread
 
 ipc.on('add-finished', reindex)
+ipc.on('id3-result', function (event, arg) {
+    console.log(arg)
+})

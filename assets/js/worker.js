@@ -5,6 +5,10 @@ const fs = require('fs');
 const dataurl = require('dataurl')
 const ipc = electron.ipcRenderer
 
+// ID3 Extractor
+const mm = require('music-metadata');
+const util = require('util');
+
 // Config Files
 const MStore = require('../assets/js/mstore.js');
 const mlib_path = 'music-lib'
@@ -33,6 +37,8 @@ function resumeTrack() {
     is_playing = true;
 }
 
+// Core Function - All Songs are queued and played over here
+
 function playSong(index) {
     let mlib = new MStore({
         configName: mlib_path,
@@ -41,7 +47,7 @@ function playSong(index) {
             mpaths: [],
         }
     });
-    
+
     // Reset Current Progress
     curr_track.pause()
     curr_track.src = ""
@@ -49,6 +55,7 @@ function playSong(index) {
     is_playing = false
 
     let mpaths = mlib.get('mpaths')
+
     if (index >= mpaths.length || index < 0) {
         curr_index = -1
         console.log('Queue Finished')
@@ -57,6 +64,10 @@ function playSong(index) {
 
     curr_index = index
     let audpath = mpaths[curr_index]
+
+    // ID3 tags Extraction
+    id3tags(audpath)
+
     createSongObject(audpath)
         .then(data => {
             curr_track.src = data
@@ -71,18 +82,13 @@ function playSong(index) {
     is_playing = true
 }
 
-function nextSong() {
-    let mlib = new MStore({
-        configName: mlib_path,
-        defaults: {
-            mdir: [],
-            mpaths: [],
-        }
-    });
-    let mpaths = mlib.get('mpaths')
-    if (loop == 0) playSong(curr_index + 1)
-    if (loop == 1) playSong((curr_index + 1) % mpaths.length)
-    if (loop == 2) playSong((curr_index))
+async function id3tags(audpath) {
+    try {
+        const metadata = await mm.parseFile(audpath);
+        ipc.send('id3-result', metadata.common)
+    } catch (error) {
+        console.error(error.message);
+    }
 }
 
 function nextSong() {
@@ -98,6 +104,7 @@ function nextSong() {
     if (loop == 1) playSong((curr_index + 1) % mpaths.length)
     if (loop == 2) playSong((curr_index))
 }
+
 function prevSong() {
     let mlib = new MStore({
         configName: mlib_path,
