@@ -16,13 +16,15 @@ const mlib_path = 'music-lib'
 
 let curr_track = document.createElement('audio');
 curr_track.addEventListener('ended', nextSong)
+curr_track.addEventListener('loadeddata', () => {
+    ipc.send('song-details', JSON.stringify({ 'track': curr_index, 'duration': parseInt(curr_track.duration) }))
+})
 let curr_index = -1;
 
 // Minor Configurations
 let shuffle = false /* Is Shuffle Enabled */
 let loop = 0 /* Loop Type (0 - No loop, 1 - Loop Queue, 2 - Loop Track)*/
 let is_playing = false
-let metadata = null /* For Storing Current Track's Metadata */
 
 function pauseTrack() {
     if (is_playing) {
@@ -80,7 +82,7 @@ function playSong(index) {
     createSongObject(audpath)
         .then(data => {
             curr_track.src = data
-            curr_track.load();
+            curr_track.load()
             curr_track.play()
             is_playing = true
         })
@@ -93,7 +95,7 @@ function playSong(index) {
 
 async function id3tags(audpath) {
     try {
-        metadata = await mm.parseFile(audpath);
+        let metadata = await mm.parseFile(audpath);
         mediasessionUpdate(metadata.common)
         ipc.send('id3-result', metadata.common)
     } catch (error) {
@@ -148,8 +150,12 @@ function mediasessionUpdate(metadata) {
         navigator.mediaSession.setActionHandler('play', resumeTrack);
         navigator.mediaSession.setActionHandler('pause', pauseTrack);
         // navigator.mediaSession.setActionHandler('stop', function () { /* Code excerpted. */ });
-        // navigator.mediaSession.setActionHandler('seekbackward', function () { /* Code excerpted. */ });
-        // navigator.mediaSession.setActionHandler('seekforward', function () { /* Code excerpted. */ });
+        navigator.mediaSession.setActionHandler('seekbackward', () => {
+            curr_track.currentTime = Math.max(curr_track.currentTime - 10, 0)
+        });
+        navigator.mediaSession.setActionHandler('seekforward', () => {
+            curr_track.currentTime = Math.min(curr_track.currentTime + 10, curr_track.duration)
+        });
         // navigator.mediaSession.setActionHandler('seekto', function () { /* Code excerpted. */ });
         // navigator.mediaSession.setActionHandler('skipad', function () { /* Code excerpted. */ });
         navigator.mediaSession.setActionHandler('previoustrack', prevSong);
@@ -160,14 +166,14 @@ function mediasessionUpdate(metadata) {
     }
 }
 
-function syncMain() {
-    console.log(metadata)
-    if (metadata == null){
-        ipc.send('sync-res', null)
-        return
-    }
-    ipc.send('sync-res', metadata.common)
-}
+// function syncMain() {
+//     console.log(metadata)
+//     if (metadata == null) {
+//         ipc.send('sync-res', null)
+//         return
+//     }
+//     ipc.send('sync-res', metadata.common)
+// }
 
 const createSongObject = (filepath) => {
     return new Promise((resolve, reject) => {
@@ -195,4 +201,4 @@ ipc.on('track', function (event, arg) {
     playSong(arg)
 })
 
-ipc.on('sync-main', syncMain)
+// ipc.on('sync-main', syncMain)

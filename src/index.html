@@ -55,6 +55,7 @@
             </span>
             <div class="col-12 d-flex flex-column align-items-center justify-content-center" id="meta-container">
               <div id="song-cover"></div>
+              <img src="" id="song-covertest">
               <div class="song-details text-center p-4">
                 <span id="song-name">Test123</span>
                 <span id="song-artist">XYZ123</span>
@@ -67,9 +68,10 @@
 
     <footer class="footer d-flex align-items-center justify-content-center">
       <div class="container row">
-        <div class="col-12">
+        <div class="col-12 d-flex align-items-center">
+          <span id="curr-dur">00:00</span>
           <input type="range" id="progress-bar" min="0" max="" value="0" onchange="changeProgressBar()" />
-          <span id="music"></span>
+          <span id="total-dur">00:00</span>
         </div>
         <div class="col-12 row">
           <div class="col-4"></div>

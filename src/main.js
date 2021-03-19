@@ -45,9 +45,9 @@ const createWindow = () => {
 
   // Background Task
   workerWindow = new BrowserWindow({
-    // height: 500,
-    // width: 1000,
-    show: false,
+    height: 500,
+    width: 1000,
+    // show: false,
     webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: true }
   });
 
@@ -132,3 +132,4 @@ ipc.on('add-finished', () => { mainWindow.webContents.send('add-finished') })
 
 ipc.on('request-sync', () => { workerWindow.webContents.send('sync-main') })
 ipc.on('sync-res', function (event, arg) { mainWindow.webContents.send('sync-res', arg) })
+ipc.on('song-details', function (event, arg) { mainWindow.webContents.send('song-details', arg) })
