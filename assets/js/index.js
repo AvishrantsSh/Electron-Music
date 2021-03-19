@@ -12,9 +12,17 @@ const mlib_path = 'music-lib'
 const closeBtn = document.getElementById('closeBtn')
 const minBtn = document.getElementById('minBtn')
 const resBtn = document.getElementById('resBtn')
+
+// Player Controls
 const playBtn = document.getElementById('playBtn')
+const shuffleBtn = document.getElementById('shuffleBtn')
+const repBtn = document.getElementById('repBtn')
+const next = document.getElementById('nextBtn')
+const prev = document.getElementById('prevBtn')
+
 const refreshBtn = document.getElementById('refreshBtn')
 const resetBtn = document.getElementById('resetBtn')
+
 const progress = document.getElementById('progress-bar')
 const total_dur = document.getElementById('total-dur')
 const curr_dur = document.getElementById('curr-dur')
@@ -38,6 +46,7 @@ const thead_layout = `
     </thead>`;
 
 
+// Event Listeners
 closeBtn.addEventListener('click', function () {
     currWin.close()
 })
@@ -104,6 +113,29 @@ addM.addEventListener('click', function () {
 refreshBtn.addEventListener('click', reindex)
 resetBtn.addEventListener('click', resetdb)
 
+shuffleBtn.addEventListener('mouseenter', () => {
+    shuffleBtn.firstChild.classList.add('bx-flashing')
+})
+
+shuffleBtn.addEventListener('mouseleave', () => {
+    shuffleBtn.firstChild.classList.remove('bx-flashing')
+})
+
+repBtn.addEventListener('mouseenter', () => {
+    repBtn.firstChild.classList.add('bx-flashing')
+})
+
+repBtn.addEventListener('mouseleave', () => {
+    repBtn.firstChild.classList.remove('bx-flashing')
+})
+
+next.addEventListener('click', () => {
+    ipc.send('skip-next')
+})
+
+prev.addEventListener('click', () => {
+    ipc.send('skip-previous')
+})
 // Handler Functions
 function initread() {
 
@@ -199,19 +231,24 @@ function resetdb() {
 }
 
 function updateID3(arg) {
-    console.log(arg)
     let title = document.getElementById('song-name')
     let artist = document.getElementById('song-artist')
     let cover = document.getElementById('song-cover')
     let cover2 = document.getElementById('song-covertest')
     title.textContent = arg.title
     artist.textContent = arg.artist
-    let thumb = URL.createObjectURL(
-        new Blob([arg.picture[0].data.buffer], { type: arg.picture[0].format } /* (1) */)
-    );
+    let thumb
+    if (arg.picture === undefined) {
+        thumb = "../assets/vectors/m_white.png"
+    }
+    else {
+        thumb = URL.createObjectURL(
+            new Blob([arg.picture[0].data.buffer], { type: arg.picture[0].format } /* (1) */)
+        );
+    }
+    console.log(thumb)
 
     cover.style.backgroundImage = "url('" + thumb + "')"
-    console.log(arg.picture[0])
 }
 
 window.onload = initread

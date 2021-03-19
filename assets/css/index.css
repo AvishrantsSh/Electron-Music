@@ -33,7 +33,7 @@
     height: 5px;
     margin: 20px;
 }
-.playBtn{
+.playBtn, .repBtn, .shuffleBtn, .prevBtn, .nextBtn{
     padding: 0.4em;
     border-radius: 50%;
     width: fit-content;
@@ -42,13 +42,17 @@
     outline: none;
     transition: all 0.2s;
 }
-.playBtn i{
+.playBtn i, .repBtn i, .shuffleBtn i, .prevBtn i, .nextBtn i{
     font-size: 1.4em;
     width: 1.4em;
     text-align: center;
     line-height: 1.4em;
     color: white;
     transition: all 0.2s;
+}
+
+.nextBtn:hover i, .prevBtn:hover i{
+    color: #888;
 }
 
 .playBtn:hover{

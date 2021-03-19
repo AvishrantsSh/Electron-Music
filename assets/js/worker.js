@@ -125,7 +125,12 @@ function prevSong() {
             mpaths: [],
         }
     });
+
     let mpaths = mlib.get('mpaths')
+    if (curr_track.currentTime > 10) {
+        playSong(curr_index)
+        return
+    }
     if (loop == 0) playSong(curr_index - 1)
     if (loop == 1) playSong((curr_index - 1) % mpaths.length)
     if (loop == 2) playSong((curr_index))

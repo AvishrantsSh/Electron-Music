@@ -13,6 +13,7 @@
   <!-- External Resources -->
   <link href="../assets/css/fa.css" rel="stylesheet">
   <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/css/boxicon/css/boxicons.min.css" rel="stylesheet">
 
   <!-- My Styles -->
   <link rel="stylesheet" href="../assets/css/styles.css">
@@ -68,18 +69,21 @@
 
     <footer class="footer d-flex align-items-center justify-content-center">
       <div class="container row">
+
+        <div class="col-12 text-center">
+          <button id="shuffleBtn" class="shuffleBtn"><i class='bx bx-shuffle'></i></button>
+          <button id="prevBtn" class="prevBtn"><i class='bx bx-skip-previous' ></i></button>
+          <button id="playBtn" class="playBtn"><i id="playicon" class="fas fa-play"></i></button>
+          <button id="nextBtn" class="nextBtn"><i class='bx bx-skip-next' ></i></button>
+          <button id="repBtn" class="repBtn"><i class='bx bx-repeat'></i></button>
+        </div>
+
         <div class="col-12 d-flex align-items-center">
           <span id="curr-dur">00:00</span>
           <input type="range" id="progress-bar" min="0" max="" value="0" onchange="changeProgressBar()" />
           <span id="total-dur">00:00</span>
         </div>
-        <div class="col-12 row">
-          <div class="col-4"></div>
-          <div class="col-4 d-flex justify-content-center">
-            <button id="playBtn" class="playBtn"><i id="playicon" class="fas fa-play"></i></button>
-          </div>
-          <div class="col-4"></div>
-        </div>
+
       </div>
     </footer>
     <script src="../assets/js/index.js"></script>

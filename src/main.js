@@ -82,26 +82,26 @@ app.on('ready', () => {
   tray = new Tray(nativeImage.createFromPath(iconpath))
   const menu = Menu.buildFromTemplate([
     {
-    label: 'Play/Pause',
-    click() { workerWindow.webContents.send('toggle') }
-  },
-  {
-    label: 'Next',
-    click() { workerWindow.webContents.send('next-song') }
-  },
-  {
-    label: 'Previous',
-    click() { workerWindow.webContents.send('prev-song') }
-  },
-  { type: 'separator' },
-  {
-    label: 'Quit',
-    click() { app.quit(); }
-  }
+      label: 'Play/Pause',
+      click() { workerWindow.webContents.send('toggle') }
+    },
+    {
+      label: 'Next',
+      click() { workerWindow.webContents.send('next-song') }
+    },
+    {
+      label: 'Previous',
+      click() { workerWindow.webContents.send('prev-song') }
+    },
+    { type: 'separator' },
+    {
+      label: 'Quit',
+      click() { app.quit(); }
+    }
   ])
 
-tray.setToolTip('MyApp')
-tray.setContextMenu(menu)
+  tray.setToolTip('MyApp')
+  tray.setContextMenu(menu)
 
 });
 
@@ -129,7 +129,8 @@ ipc.on('play-track', function (event, arg) {
 })
 
 ipc.on('add-finished', () => { mainWindow.webContents.send('add-finished') })
-
+ipc.on('skip-previous', () => { workerWindow.webContents.send('prev-song') })
+ipc.on('skip-next', () => { workerWindow.webContents.send('next-song') })
 ipc.on('request-sync', () => { workerWindow.webContents.send('sync-main') })
 ipc.on('sync-res', function (event, arg) { mainWindow.webContents.send('sync-res', arg) })
 ipc.on('song-details', function (event, arg) { mainWindow.webContents.send('song-details', arg) })
