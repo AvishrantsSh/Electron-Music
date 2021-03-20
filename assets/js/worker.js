@@ -42,6 +42,7 @@ function resumeTrack() {
     }
     else {
         curr_track.play();
+        ipc.send('playing-song')
     }
     is_playing = true;
 }
@@ -63,6 +64,7 @@ function playSong(index) {
         curr_track.src = ''
         curr_track.load();
         curr_track.play()
+        ipc.send('playing-song')
         is_playing = false
     }
     let mpaths = mlib.get('mpaths')
@@ -84,6 +86,7 @@ function playSong(index) {
             curr_track.src = data
             curr_track.load()
             curr_track.play()
+            ipc.send('playing-song')
             is_playing = true
         })
         .catch(err => {
