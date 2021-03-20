@@ -30,12 +30,19 @@ const curr_dur = document.getElementById('curr-dur')
 // Icon Set
 const maxmin = document.getElementById('maxmin')
 const playicon = document.getElementById('playicon')
+let title = document.getElementById('song-name')
+let artist = document.getElementById('song-artist')
+let cover = document.getElementById('song-cover')
+let song_dur = 0
 
 // Misc
 const addM = document.getElementById('folder_pick')
 const mtable = document.getElementById('mtable')
-let is_playing = false
 const currWin = remote.getCurrentWindow()
+
+let is_playing = false
+let def_cover = true
+let progressTimer = null
 
 const thead_layout = `
     <thead>
@@ -58,14 +65,12 @@ minBtn.addEventListener('click', function () {
 resBtn.addEventListener('click', function () {
     if (currWin.isMaximized()) {
         currWin.unmaximize()
-        maxmin.classList.remove("fa-square");
-        maxmin.classList.add("fa-clone");
+        maxmin.className = "far fa-clone";
     }
     else {
         if (currWin.maximizable) {
             currWin.maximize()
-            maxmin.classList.add("fa-square");
-            maxmin.classList.remove("fa-clone");
+            maxmin.className = "far fa-square";
         }
     }
 })
@@ -74,12 +79,12 @@ playBtn.addEventListener('click', function () {
     if (is_playing) {
         ipc.send("playback-toggle")
         is_playing = false
-        playicon.className='fas fa-play'
+        playicon.className = 'fas fa-play'
     }
     else {
         ipc.send("playback-toggle")
         is_playing = true
-        playicon.className='fas fa-pause'
+        playicon.className = 'fas fa-pause'
     }
 })
 
@@ -232,26 +237,46 @@ function resetdb() {
 }
 
 function updateID3(arg) {
-    let title = document.getElementById('song-name')
-    let artist = document.getElementById('song-artist')
-    let cover = document.getElementById('song-cover')
-    let cover2 = document.getElementById('song-covertest')
     title.textContent = arg.title
     artist.textContent = arg.artist
     let thumb
     if (arg.picture === undefined) {
-        thumb = "../assets/vectors/m_white.png"
+        thumb = "../assets/vectors/disc1.svg"
+        def_cover = true
     }
     else {
         thumb = URL.createObjectURL(
             new Blob([arg.picture[0].data.buffer], { type: arg.picture[0].format } /* (1) */)
         );
+        def_cover = false
     }
-    console.log(thumb)
 
     cover.style.backgroundImage = "url('" + thumb + "')"
+    if (def_cover) {
+        cover.style.borderRadius = "50%"
+        cover.style.animationDuration = "4s"
+        cover.style.animationPlayState = 'running'
+    }
+    else {
+        cover.style.borderRadius = "0px"
+        cover.style.animationDuration = "0s"
+        cover.style.animationPlayState = 'paused'
+    }
 }
 
+function sliderUpdate() {
+    if (is_playing) {
+        let curr = parseInt(progress.value)
+        progress.value = curr + 1
+        let value = (progress.value - progress.min) / (progress.max - progress.min) * 100
+        progress.style.background = 'linear-gradient(to right, #82CFD0 0%, #82CFD0 ' + value + '%, #fff ' + value + '%, white 100%)'
+        let min = parseInt((curr + 1) / 60)
+        let sec = (curr + 1) % 60
+        min = min < 10 ? "0" + min : sec
+        sec = sec < 10 ? "0" + sec : sec
+        curr_dur.innerHTML = min + ":" + sec
+    }
+}
 window.onload = initread
 
 progress.oninput = function () {
@@ -260,11 +285,20 @@ progress.oninput = function () {
 };
 
 ipc.on('add-finished', reindex)
-ipc.on('playing-song',function (event,arg) {
-    is_playing=true;
-    playicon.className='fas fa-pause'
-}
-    )
+
+ipc.on('song-resume', () => {
+    is_playing = true;
+    playicon.className = 'fas fa-pause'
+    if (def_cover == true)
+        cover.style.animationPlayState = 'running'
+})
+
+ipc.on('song-pause', () => {
+    is_playing = false;
+    playicon.className = 'fas fa-play'
+    if (def_cover == true)
+        cover.style.animationPlayState = 'paused'
+})
 
 ipc.on('id3-result', function (event, arg) {
     updateID3(arg)
@@ -276,6 +310,16 @@ ipc.on('song-details', function (event, arg) {
     let sec = data.duration % 60
     min = min < 10 ? "0" + min : sec
     sec = sec < 10 ? "0" + sec : sec
+    curr_dur.textContent = '00:00'
     total_dur.innerHTML = min + ":" + sec
+    progress.value = 0
     progress.max = parseInt(data.duration)
+    progress.style.background = 'linear-gradient(to right, #82CFD0 0%, #fff 0%, #fff 100%)'
+    song_dur = data.duration
+
+    if(progressTimer != null)
+        clearInterval(progressTimer)
+
+    progressTimer = setInterval(sliderUpdate, 1000)
+    
 })

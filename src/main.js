@@ -128,7 +128,8 @@ ipc.on('play-track', function (event, arg) {
   workerWindow.webContents.send('track', arg)
 })
 
-ipc.on('playing-song', () => { mainWindow.webContents.send('playing-song') })
+ipc.on('song-resume', () => { mainWindow.webContents.send('song-resume') })
+ipc.on('song-pause', () => { mainWindow.webContents.send('song-pause') })
 ipc.on('add-finished', () => { mainWindow.webContents.send('add-finished') })
 ipc.on('skip-previous', () => { workerWindow.webContents.send('prev-song') })
 ipc.on('skip-next', () => { workerWindow.webContents.send('next-song') })

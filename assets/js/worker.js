@@ -29,9 +29,8 @@ let is_playing = false
 function pauseTrack() {
     if (is_playing) {
         // Ease-in and out feature to be added here
-
         curr_track.pause();
-        is_playing = false
+        ipc.send('song-pause')
     }
     is_playing = false;
 }
@@ -42,9 +41,9 @@ function resumeTrack() {
     }
     else {
         curr_track.play();
-        ipc.send('playing-song')
     }
     is_playing = true;
+    ipc.send('song-resume')
 }
 
 // Core Function - All Songs are queued and played over here
@@ -64,9 +63,9 @@ function playSong(index) {
         curr_track.src = ''
         curr_track.load();
         curr_track.play()
-        ipc.send('playing-song')
         is_playing = false
     }
+
     let mpaths = mlib.get('mpaths')
 
     if (index >= mpaths.length || index < 0) {
@@ -86,7 +85,6 @@ function playSong(index) {
             curr_track.src = data
             curr_track.load()
             curr_track.play()
-            ipc.send('playing-song')
             is_playing = true
         })
         .catch(err => {
@@ -94,6 +92,7 @@ function playSong(index) {
         })
 
     is_playing = true
+    ipc.send('song-resume')
 }
 
 async function id3tags(audpath) {

@@ -1,3 +1,12 @@
+@keyframes rotating {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+}
+
 #leftpane{
     height: 90vh;
     background-color: #222;
@@ -12,8 +21,11 @@
 #song-cover{
     width: 250px;
     height: 250px;
-    background: url('../vectors/m_white.png') center center no-repeat;
+    background: url('../vectors/disc1.svg') center center no-repeat;
+    border-radius: 50%;
     background-size: contain;
+    animation: rotating 4s linear infinite;
+    animation-play-state: paused;
     display: block;
 }
 #song-details{
@@ -62,6 +74,7 @@
     outline: 0;
     border: 0;
     margin: 20px;
+    border-radius: 3px;
     -webkit-appearance: none;
     width: 100%;
     transition: all 450ms ease-in;
