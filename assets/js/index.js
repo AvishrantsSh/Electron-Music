@@ -223,7 +223,6 @@ function resetdb() {
             mpaths: [],
         }
     });
-
     mlib.set('mdir', [])
     mlib.set('mpaths', [])
     console.log('Reset Complete')
@@ -253,6 +252,11 @@ function updateID3(arg) {
 
 window.onload = initread
 
+progress.oninput = function () {
+    var value = (this.value - this.min) / (this.max - this.min) * 100
+    this.style.background = 'linear-gradient(to right, #82CFD0 0%, #82CFD0 ' + value + '%, #fff ' + value + '%, white 100%)'
+};
+
 ipc.on('add-finished', reindex)
 
 ipc.on('id3-result', function (event, arg) {
@@ -266,4 +270,5 @@ ipc.on('song-details', function (event, arg) {
     min = min < 10 ? "0" + min : sec
     sec = sec < 10 ? "0" + sec : sec
     total_dur.innerHTML = min + ":" + sec
+    progress.max = parseInt(data.duration)
 })
