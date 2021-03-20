@@ -256,6 +256,11 @@ function updateID3(arg) {
 window.onload = initread
 
 ipc.on('add-finished', reindex)
+ipc.on('playing-song',function (event,arg) {
+    is_playing=true;
+    playicon.className='fas fa-pause'
+}
+    )
 
 ipc.on('id3-result', function (event, arg) {
     updateID3(arg)
