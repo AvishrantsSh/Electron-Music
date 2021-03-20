@@ -74,10 +74,12 @@ playBtn.addEventListener('click', function () {
     if (is_playing) {
         ipc.send("playback-toggle")
         is_playing = false
+        playicon.className='fas fa-play'
     }
     else {
         ipc.send("playback-toggle")
         is_playing = true
+        playicon.className='fas fa-pause'
     }
 })
 
