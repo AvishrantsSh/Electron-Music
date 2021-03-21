@@ -76,16 +76,10 @@ resBtn.addEventListener('click', function () {
 })
 
 playBtn.addEventListener('click', function () {
-    if (is_playing) {
+    if (is_playing)
         ipc.send("playback-toggle")
-        is_playing = false
-        playicon.className = 'fas fa-play'
-    }
-    else {
+    else
         ipc.send("playback-toggle")
-        is_playing = true
-        playicon.className = 'fas fa-pause'
-    }
 })
 
 addM.addEventListener('click', function () {
@@ -237,8 +231,8 @@ function resetdb() {
 }
 
 function updateID3(arg) {
-    title.textContent = arg.title
-    artist.textContent = arg.artist
+    title.textContent = arg.title === undefined ? '<-File Name to Appear->' : arg.title
+    artist.textContent = arg.artist === undefined ? 'Unknown Artist' : arg.artist
     let thumb
     if (arg.picture === undefined) {
         thumb = "../assets/vectors/disc1.svg"
@@ -317,9 +311,12 @@ ipc.on('song-details', function (event, arg) {
     progress.style.background = 'linear-gradient(to right, #82CFD0 0%, #fff 0%, #fff 100%)'
     song_dur = data.duration
 
-    if(progressTimer != null)
+    if (progressTimer != null)
         clearInterval(progressTimer)
 
     progressTimer = setInterval(sliderUpdate, 1000)
-    
+
+})
+ipc.on('INACCESSIBLE', () => {
+    console.log('File Not Accessible')
 })

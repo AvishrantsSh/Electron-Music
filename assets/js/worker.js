@@ -77,22 +77,23 @@ function playSong(index) {
     curr_index = index
     let audpath = mpaths[curr_index]
 
-    // ID3 tags Extraction
-    id3tags(audpath)
-
     createSongObject(audpath)
         .then(data => {
             curr_track.src = data
             curr_track.load()
             curr_track.play()
             is_playing = true
+            // ID3 tags Extraction
+            id3tags(audpath)
+            
+            ipc.send('song-resume')
+
         })
         .catch(err => {
-            console.log(err)
+            ipc.send('INACCESSIBLE')
         })
 
-    is_playing = true
-    ipc.send('song-resume')
+
 }
 
 async function id3tags(audpath) {
