@@ -26,16 +26,17 @@ let shuffle = false /* Is Shuffle Enabled */
 let loop = 0 /* Loop Type (0 - No loop, 1 - Loop Queue, 2 - Loop Track)*/
 let is_playing = false
 
-function pauseTrack() {
+function pauseTrack(send = true) {
     if (is_playing) {
         // Ease-in and out feature to be added here
         curr_track.pause();
-        ipc.send('song-pause')
+        if (send)
+            ipc.send('song-pause')
     }
     is_playing = false;
 }
 
-function resumeTrack() {
+function resumeTrack(send = true) {
     if (!is_playing && curr_index == -1) {
         playSong(0)
     }
@@ -43,7 +44,8 @@ function resumeTrack() {
         curr_track.play();
     }
     is_playing = true;
-    ipc.send('song-resume')
+    if (send)
+        ipc.send('song-resume')
 }
 
 // Core Function - All Songs are queued and played over here
@@ -59,7 +61,7 @@ function playSong(index) {
 
     // Reset Current Progress
     if (is_playing) {
-        pauseTrack()
+        pauseTrack(false)
         curr_track.src = ''
         curr_track.load();
         curr_track.play()
@@ -85,7 +87,7 @@ function playSong(index) {
             is_playing = true
             // ID3 tags Extraction
             id3tags(audpath)
-            
+
             ipc.send('song-resume')
 
         })
