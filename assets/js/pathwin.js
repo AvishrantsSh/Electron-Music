@@ -35,6 +35,7 @@ addpth.addEventListener('click', function () {
             else {
                 console.log("Path Already Exists!")
             }
+            fetch_dir()
         }
     }).catch(err => {
         console.log(err)

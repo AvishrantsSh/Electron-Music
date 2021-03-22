@@ -12,21 +12,33 @@
 
   <!-- External Resources -->
   <link href="../assets/css/fa.css" rel="stylesheet">
-  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="../assets/css/boxicon/css/boxicons.min.css" rel="stylesheet">
 
   <!-- My Styles -->
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="stylesheet" href="../assets/css/index.css">
   <link rel="stylesheet" href="../assets/css/scroll.css">
+  <script src="../assets/bootstrap/js/bootstrap.bundle.js"></script>
 </head>
 
 <body>
   <main>
     <header>
       <nav id="stickynav">
+        <div class="dropdown" style="display: inline-block;">
+          <button class="btn btn-secondary ctrlBtn dropdown-toggle" type="button" id="menuBtn" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="bx bx-dots-vertical-rounded"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="menuBtn">
+            <li><button class="dropdown-item" id="refreshBtn">Sync Music</button></li>
+            <li><button class="dropdown-item" id="resetBtn">Reset</button></li>
+            <li><button class="dropdown-item" id="folder_pick">Add Music Folder</button></li>
+          </ul>
+        </div>
         <button id="minBtn" class="ctrlBtn"><i class="fas fa-minus"></i></button>
-        <button id="resBtn" class="ctrlBtn"><i id="maxmin" class="far fa-square"></i></button>
+        <button id="resBtn" class="ctrlBtn"><i id="maxmin" class=""></i></button>
         <button id="closeBtn" class="ctrlBtn"><i class="fas fa-times"></i></button>
       </nav>
     </header>
@@ -35,31 +47,20 @@
       <div class="row">
         <!-- Left Pane -->
         <div class="col-4" id="leftpane">
-          <div class="row">
-            <div class="col-8">
-              <h2>Music</h2>
-            </div>
-            <div class="col-4">
-              <button id="refreshBtn">Refresh</button>
-              <button id="resetBtn">Reset</button>
-            </div>
-          </div>
+          <h2>Music</h2>
+          <span id="table-msg"></span>
           <table class="table table-fixed" id="mtable"></table>
-
         </div>
 
         <!-- Right Pane -->
         <div class="col-8" id="rightpane">
           <div class="row">
-            <span class="col-12">
-              Not finding your music? <button id="folder_pick">Add Now!</button>
-            </span>
             <div class="col-12 d-flex flex-column align-items-center justify-content-center" id="meta-container">
               <div id="song-cover"></div>
               <img src="" id="song-covertest">
               <div class="song-details text-center p-4">
-                <span id="song-name">Test123</span>
-                <span id="song-artist">XYZ123</span>
+                <span id="song-name"></span>
+                <span id="song-artist"></span>
               </div>
             </div>
           </div>
@@ -69,13 +70,12 @@
 
     <footer class="footer d-flex align-items-center justify-content-center">
       <div class="container row">
-
-        <div class="col-12 text-center">
-          <button id="shuffleBtn" class="shuffleBtn"><i class='bx bx-shuffle'></i></button>
-          <button id="prevBtn" class="prevBtn"><i class='bx bx-skip-previous' ></i></button>
-          <button id="playBtn" class="playBtn"><i id="playicon" class="fas fa-play"></i></button>
-          <button id="nextBtn" class="nextBtn"><i class='bx bx-skip-next' ></i></button>
-          <button id="repBtn" class="repBtn"><i class='bx bx-repeat'></i></button>
+        <div class="col-12 text-center mt-2">
+          <button id="shuffleBtn" class="shuffleBtn m-1"><i class='bx bx-shuffle'></i></button>
+          <button id="prevBtn" class="prevBtn m-1"><i class='bx bx-skip-previous'></i></button>
+          <button id="playBtn" class="playBtn m-1"><i id="playicon" class="bx bx-play"></i></button>
+          <button id="nextBtn" class="nextBtn m-1"><i class='bx bx-skip-next'></i></button>
+          <button id="repBtn" class="repBtn m-1"><i class='bx bx-repeat'></i></button>
         </div>
 
         <div class="col-12 d-flex align-items-center">

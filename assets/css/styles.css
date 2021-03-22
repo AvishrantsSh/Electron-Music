@@ -46,9 +46,14 @@ body{
 /* Footer */
 .footer{
     position: absolute;
-    height: 10vh;
+    min-height: 10vh;
+    overflow: hidden;
     background-color: #222;
     width: 100vw;
     margin: 0;
     bottom: 0;
+}
+
+.dropdown-toggle::after {
+    display: none;
 }

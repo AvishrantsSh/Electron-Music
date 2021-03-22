@@ -42,23 +42,27 @@
 /* Player Config */
 
 .playBtn, .repBtn, .shuffleBtn, .prevBtn, .nextBtn{
-    padding: 0.4em;
+    padding-top: 0.7vh;
     border-radius: 50%;
-    width: fit-content;
-    background-color: transparent;
     border: 0;
+    background-color: #333;
     outline: none;
     transition: all 0.2s;
 }
-.playBtn i, .repBtn i, .shuffleBtn i, .prevBtn i, .nextBtn i{
-    font-size: 1.4em;
-    width: 1.4em;
+.playBtn i,.prevBtn i, .nextBtn i{
+    font-size: 3vh;
+    width: 3vh;
     text-align: center;
-    line-height: 1.4em;
     color: white;
     transition: all 0.2s;
 }
-
+.shuffleBtn i, .repBtn i{
+    font-size: 2.7vh;
+    width: 2.7vh;
+    text-align: center;
+    color: white;
+    transition: all 0.2s;
+}
 .nextBtn:hover i, .prevBtn:hover i{
     color: #888;
 }

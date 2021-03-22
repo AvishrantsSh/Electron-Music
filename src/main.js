@@ -45,9 +45,9 @@ const createWindow = () => {
 
   // Background Task
   workerWindow = new BrowserWindow({
-    height: 500,
-    width: 1000,
-    // show: false,
+    // height: 500,
+    // width: 1000,
+    show: false,
     webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: true }
   });
 
@@ -67,7 +67,7 @@ const createWindow = () => {
   });
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -137,3 +137,4 @@ ipc.on('request-sync', () => { workerWindow.webContents.send('sync-main') })
 ipc.on('INACCESSIBLE', () => { mainWindow.webContents.send('INACCESSIBLE') })
 ipc.on('sync-res', function (event, arg) { mainWindow.webContents.send('sync-res', arg) })
 ipc.on('song-details', function (event, arg) { mainWindow.webContents.send('song-details', arg) })
+ipc.on('seek-pos', function (event, arg) { workerWindow.webContents.send('seek-pos', arg) })

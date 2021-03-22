@@ -48,6 +48,16 @@ function resumeTrack(send = true) {
         ipc.send('song-resume')
 }
 
+function stopTrack() {
+    if (is_playing) {
+        pauseTrack(false)
+        curr_track.src = ''
+        curr_track.load();
+        curr_track.play()
+        is_playing = false
+    }
+}
+
 // Core Function - All Songs are queued and played over here
 
 function playSong(index) {
@@ -60,13 +70,7 @@ function playSong(index) {
     });
 
     // Reset Current Progress
-    if (is_playing) {
-        pauseTrack(false)
-        curr_track.src = ''
-        curr_track.load();
-        curr_track.play()
-        is_playing = false
-    }
+    stopTrack()
 
     let mpaths = mlib.get('mpaths')
 
@@ -203,12 +207,18 @@ ipc.on('resume', resumeTrack)
 
 ipc.on('pause', pauseTrack)
 
+ipc.on('stop', stopTrack)
+
 ipc.on('next-song', nextSong)
 
 ipc.on('prev-song', prevSong)
 
 ipc.on('track', function (event, arg) {
     playSong(arg)
+})
+
+ipc.on('seek-pos', function (event, arg) {
+    curr_track.currentTime = parseInt(arg)
 })
 
 // ipc.on('sync-main', syncMain)

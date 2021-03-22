@@ -82,34 +82,7 @@ playBtn.addEventListener('click', function () {
         ipc.send("playback-toggle")
 })
 
-addM.addEventListener('click', function () {
-    const modalPath = path.join('file://', __dirname, 'pathdef.html')
-
-    let win = new remote.BrowserWindow({
-        backgroundColor: '#333',
-        parent: currWin,
-        modal: true,
-        width: 400,
-        height: 320,
-        alwaysOnTop: true,
-        frame: false,
-        show: false,
-        resizable: false,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-            enableRemoteModule: true
-        }
-    })
-
-    win.once('ready-to-show', () => {
-        win.show()
-    })
-
-    win.on('close', () => { win = null })
-    win.loadURL(modalPath)
-    win.show()
-})
+addM.addEventListener('click', pickFolder)
 
 refreshBtn.addEventListener('click', reindex)
 resetBtn.addEventListener('click', resetdb)
@@ -137,11 +110,23 @@ next.addEventListener('click', () => {
 prev.addEventListener('click', () => {
     ipc.send('skip-previous')
 })
+
+// Slider Functionality
+progress.oninput = function () {
+    var value = (this.value - this.min) / (this.max - this.min) * 100
+    this.style.background = 'linear-gradient(to right, #82CFD0 0%, #82CFD0 ' + value + '%, #fff ' + value + '%, white 100%)'
+    let min = parseInt(progress.value / 60)
+    let sec = progress.value % 60
+    min = min < 10 ? "0" + min : sec
+    sec = sec < 10 ? "0" + sec : sec
+    curr_dur.innerHTML = min + ":" + sec
+    ipc.send('seek-pos', progress.value)
+};
 // Handler Functions
 function initread() {
-
     // Request sync with worker process
     ipc.send('request-sync')
+    let msg = document.getElementById('table-msg')
 
     let mlib = new MStore({
         configName: mlib_path,
@@ -155,10 +140,9 @@ function initread() {
     let mpaths = mlib.get('mpaths')
     let total = mpaths.length
     if (total == 0) {
-        mtable.innerHTML = `
-            <tr>
-                <td> Oh Snap. No Music Data Found</td>
-            </tr>`
+        msg.innerHTML = `No Music Data Found. 
+        <button class="btn btn-secondary" onclick='pickFolder()'> Add Now!
+        </button>`
     }
     else {
         // let tmp = thead_layout
@@ -170,10 +154,16 @@ function initread() {
                     <td class="col-xs-3">`+ (index + 1) + `</td>
                     <td class="col-xs-9">`+ plist.pop() + `</td>
                 </tr>`
+            mtable.innerHTML = tmp
         })
-
-        mtable.innerHTML = tmp
+        msg.innerHTML = 'Total Files Scanned : ' + mpaths.length
     }
+
+    // Initial MaxMin Symbol
+    if (currWin.isMaximized())
+        maxmin.className = 'far fa-square'
+    else
+        maxmin.className = "far fa-clone";
 }
 
 function reindex() {
@@ -228,10 +218,14 @@ function resetdb() {
     mlib.set('mpaths', [])
     console.log('Reset Complete')
     reindex()
+    cleardt()
 }
 
+function cleardt() {
+    mtable.innerHTML = ''
+}
 function updateID3(arg) {
-    title.textContent = arg.title === undefined ? '<-File Name to Appear->' : arg.title
+    title.textContent = arg.title === undefined ? 'Unknown Song' : arg.title
     artist.textContent = arg.artist === undefined ? 'Unknown Artist' : arg.artist
     let thumb
     if (arg.picture === undefined) {
@@ -271,25 +265,49 @@ function sliderUpdate() {
         curr_dur.innerHTML = min + ":" + sec
     }
 }
-window.onload = initread
 
-progress.oninput = function () {
-    var value = (this.value - this.min) / (this.max - this.min) * 100
-    this.style.background = 'linear-gradient(to right, #82CFD0 0%, #82CFD0 ' + value + '%, #fff ' + value + '%, white 100%)'
-};
+function pickFolder() {
+    const modalPath = path.join('file://', __dirname, 'pathdef.html')
+
+    let win = new remote.BrowserWindow({
+        backgroundColor: '#333',
+        parent: currWin,
+        modal: true,
+        width: 400,
+        height: 320,
+        // alwaysOnTop: true,
+        frame: false,
+        show: false,
+        resizable: false,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true
+        }
+    })
+
+    win.once('ready-to-show', () => {
+        win.show()
+    })
+
+    win.on('close', () => { win = null })
+    win.loadURL(modalPath)
+    win.show()
+}
+window.onload = initread
 
 ipc.on('add-finished', reindex)
 
 ipc.on('song-resume', () => {
     is_playing = true;
-    playicon.className = 'fas fa-pause'
+    playicon.className = 'bx bx-pause'
     if (def_cover == true)
         cover.style.animationPlayState = 'running'
 })
 
 ipc.on('song-pause', () => {
     is_playing = false;
-    playicon.className = 'fas fa-play'
+    playicon.className = 'bx bx-play'
     if (def_cover == true)
         cover.style.animationPlayState = 'paused'
 })

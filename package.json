@@ -1,6 +1,6 @@
 {
   "name": "myapp",
-  "productName": "Mujik",
+  "productName": "myapp",
   "version": "1.0.4",
   "description": "Desciption to be provided soon :P",
   "main": "src/main.js",
