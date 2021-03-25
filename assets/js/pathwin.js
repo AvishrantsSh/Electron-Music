@@ -13,7 +13,7 @@ closeBtn.addEventListener('click', function () {
     var window = remote.getCurrentWindow()
     window.close()
 })
-
+// Just a test
 addpth.addEventListener('click', function () {
     let mlib = new MStore({
         configName: mlib_path,
