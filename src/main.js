@@ -73,6 +73,15 @@ const createWindow = () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  // mainWindow.on('close', (event) => {
+  //   if (app.quitting) {
+  //     mainWindow = null
+  //   } else {
+  //     event.preventDefault()
+  //     mainWindow.hide()
+  //   }
+  // })
 };
 
 app.on('ready', () => {
@@ -127,7 +136,7 @@ ipc.on('id3-result', function (event, arg) {
 ipc.on('play-track', function (event, arg) {
   workerWindow.webContents.send('track', arg)
 })
-
+ipc.on('toggle-shuffle', () => { workerWindow.webContents.send('toggle-shuffle') })
 ipc.on('song-resume', () => { mainWindow.webContents.send('song-resume') })
 ipc.on('song-pause', () => { mainWindow.webContents.send('song-pause') })
 ipc.on('add-finished', () => { mainWindow.webContents.send('add-finished') })

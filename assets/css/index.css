@@ -84,6 +84,9 @@
     transition: all 450ms ease-in;
     height: 5px;
 }
+.slider:disabled{
+    background-color: #ccc;
+}
 .slider::-webkit-slider-thumb {
     width: 15px;
     -webkit-appearance: none;

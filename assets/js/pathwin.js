@@ -61,8 +61,12 @@ function fetch_dir() {
     else {
         table.innerHTML = ""
         mdir.forEach(function (path, index) {
+            let tmp = index
+            if (path.length > 40)
+                tmp = path.substring(0, 37) + "..."
+            console.log(path.length)
             table.innerHTML += `<tr onclick="playSong(` + index + `)">
-                    <td class="col-xs-12">`+ path + `</td>
+                    <td class="col-xs-12">`+ tmp + `</td>
                 </tr>`
         });
     }

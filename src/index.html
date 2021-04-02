@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="stylesheet" href="../assets/css/index.css">
   <link rel="stylesheet" href="../assets/css/scroll.css">
+  <link rel="stylesheet" href="../assets/css/snackbar.css">
   <script src="../assets/bootstrap/js/bootstrap.bundle.js"></script>
 </head>
 
@@ -80,13 +81,15 @@
 
         <div class="col-12 d-flex align-items-center">
           <span id="curr-dur">00:00</span>
-          <input type="range" class="slider" id="progress-bar" min="0" max="" value="0" />
+          <input type="range" class="slider" id="progress-bar" min="0" max="100" value="0"/>
           <span id="total-dur">00:00</span>
         </div>
 
       </div>
     </footer>
+    <div id="snackbar"></div>
     <script src="../assets/js/index.js"></script>
+    <script src="../assets/js/snack.js"></script>
   </main>
 </body>
 

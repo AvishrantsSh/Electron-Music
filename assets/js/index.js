@@ -80,6 +80,9 @@ playBtn.addEventListener('click', function () {
         ipc.send("playback-toggle")
     else
         ipc.send("playback-toggle")
+
+    if (progress.disabled == true)
+        progress.disabled = false
 })
 
 addM.addEventListener('click', pickFolder)
@@ -109,6 +112,10 @@ next.addEventListener('click', () => {
 
 prev.addEventListener('click', () => {
     ipc.send('skip-previous')
+})
+
+shuffleBtn.addEventListener('click', ()=> {
+    ipc.send('toggle-shuffle')
 })
 
 // Slider Functionality
@@ -286,6 +293,7 @@ function pickFolder() {
         }
     })
 
+    // win.webContents.openDevTools()
     win.once('ready-to-show', () => {
         win.show()
     })
@@ -336,5 +344,6 @@ ipc.on('song-details', function (event, arg) {
 
 })
 ipc.on('INACCESSIBLE', () => {
+    snack('File not Accessible. Was it deleted?')
     console.log('File Not Accessible')
 })

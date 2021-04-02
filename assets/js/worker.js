@@ -48,6 +48,10 @@ function resumeTrack(send = true) {
         ipc.send('song-resume')
 }
 
+function shuffleTrack(){
+    shuffleTrack = !shuffleTrack
+}
+
 function stopTrack() {
     if (is_playing) {
         pauseTrack(false)
@@ -59,7 +63,6 @@ function stopTrack() {
 }
 
 // Core Function - All Songs are queued and played over here
-
 function playSong(index) {
     let mlib = new MStore({
         configName: mlib_path,
