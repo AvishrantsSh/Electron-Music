@@ -1,4 +1,4 @@
-name: Build/release
+name: Build/Release
 
 on: push
 
@@ -20,6 +20,7 @@ jobs:
           node-version: 14.16.0
 
       - name: Build/release Electron app
+        if: startsWith(github.ref, 'refs/tags')
         uses: samuelmeuli/action-electron-builder@v1
         with:
           # GitHub token, automatically provided to the action

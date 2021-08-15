@@ -12,7 +12,7 @@
     "lint": "eslint src --color"
   },
   "keywords": [],
-  "author": "avishrant",
+  "author": "AvishrantSh",
   "license": "MIT",
   "config": {
     "forge": {
@@ -47,9 +47,12 @@
     }
   },
   "dependencies": {
+    "acorn": "^8.4.1",
+    "core-js": "^3.16.1",
     "dataurl": "^0.1.0",
     "electron-compile": "^6.4.4",
     "electron-squirrel-startup": "^1.0.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "music-metadata": "^7.8.1"
   },
   "devDependencies": {
@@ -59,10 +62,10 @@
     "electron-builder": "^22.10.5",
     "electron-forge": "^5.2.4",
     "electron-prebuilt-compile": "8.2.0",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^15.1.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.22.0"
   }
 }
